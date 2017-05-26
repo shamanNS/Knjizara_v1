@@ -1,0 +1,51 @@
+﻿@using Domaci_MVC_1.Models;
+@using Domaci_MVC_1.Controllers;
+
+@model IEnumerable<Book>
+
+@{
+    ViewBag.Title = "Lista svih knjiga";
+}
+
+<h2>All books:</h2>
+
+@{ if (Model != null)
+    {
+        <table border="1">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Genre</th>
+                <th></th>
+            </tr>
+            @foreach (Book b in Model)
+            {
+                if (!b.isDeleted)
+                {
+                    <tr>
+                        <td>@b.Id</td>
+                        <td>@b.Name</td>
+                        <td>@b.Price</td>
+                        <td>@b.Genre</td>
+                        <td>@Html.ActionLink("Delete", "DeleteBook", new { Id = @b.Id})</td>
+                    </tr>
+                }
+
+            }
+        </table>
+    }
+    else
+    {
+        <h2>Nema knjiga za prikaz!</h2>
+    }
+}
+
+
+<div>
+    @Html.ActionLink("Link for homepage", "Index", "Bookstore")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

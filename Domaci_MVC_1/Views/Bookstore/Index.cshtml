@@ -1,0 +1,47 @@
+﻿@using Domaci_MVC_1.Models;
+@using Domaci_MVC_1.Controllers;
+
+@model IEnumerable<Book>
+
+@{
+    ViewBag.Title = "Dodavanje knjiga";
+}
+
+<h2>Bookstore - Home page</h2>
+<form action="/Bookstore/AddBook" method="post">
+    <table border="1">
+        <tr>
+            <th colspan="2" style="text-align: center">Add new book
+            </th>
+        </tr>
+        <tr>
+            <td>Name of book</td>
+            <td>
+                <input type="text" name="Name"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Price of book</td>
+            <td>
+                <input type="text" name="Price" />
+            </td>
+        </tr>
+        <tr style="text-align: right">
+            <td colspan="2">
+                <input type="submit" value="Add" />
+            </td>
+
+        </tr>
+        
+    </table>
+</form>
+<div style="display: inline-block;">
+    @Html.ActionLink("Show all books | ", "List", "Bookstore")
+</div>
+<div style="display: inline-block;">
+    @Html.ActionLink("Show deleted books", "Deleted", "Bookstore")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
