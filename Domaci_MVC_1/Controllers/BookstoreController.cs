@@ -10,23 +10,53 @@ namespace Domaci_MVC_1.Controllers
     public class BookstoreController : Controller
     {
 
-        public  static List<Book> listaKnjiga = new List<Book>()
-            {
-                new Book("Harry Potter", 200, BookGenre.Science, false),
-                 new Book("Game of Thrones", 222, BookGenre.Comedy, false)
-            };
+        public static List<Book> listaKnjiga  = new List<Book>();
 
+        #region nekoriscen metod
+        //public static void PopuniListuKnjiga()
+        //{
+        //         Book book1 = new Book("Harry Potter", 200, BookGenre.Science, false);
+        //        Book book2 = new Book("Game of Thrones", 222, BookGenre.Comedy, false);
 
+        //        book1.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, prve knjige");
+        //        book1.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, prve knjige");
+
+        //        book2.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, druge knjige");
+        //        book2.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, druge knjige");
+
+        //        listaKnjiga.Add(book1);
+        //        listaKnjiga.Add(book2);
+
+        //}
+        #endregion
+        static BookstoreController()
+        {
+            //PopuniListuKnjiga();
+            Book book1 = new Book("Harry Potter", 200, BookGenre.Science, false);
+            Book book2 = new Book("Game of Thrones", 222, BookGenre.Comedy, false);
+
+            book1.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, prve knjige");
+            book1.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, prve knjige");
+
+            book2.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, druge knjige");
+            book2.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, druge knjige");
+
+            listaKnjiga.Add(book1);
+            listaKnjiga.Add(book2);
+        }
         public ActionResult Index()
         {
             
+
+
+
             return View();
         }
 
 
         public ActionResult List()
         {
-
+            
             /*
              * ukoliko želim da sadržaj view izgleda drugačije
              * ukoliko nema šta da prikaže, znači da ne prikazuje
@@ -112,10 +142,10 @@ namespace Domaci_MVC_1.Controllers
         //}
         #endregion
 
-            /* PITATI NA PREDAVANJU
-             * kako bi se linkovao "Delete" link u "All books" tabeli
-             * da brisanje radi pomoću POST metode umesto GET?
-              */
+        /* PITATI NA PREDAVANJU
+         * kako bi se linkovao "Delete" link u "All books" tabeli
+         * da brisanje radi pomoću POST metode umesto GET?
+          */
         [HttpPost]
         public ActionResult DeleteBook(int Id)
         {
@@ -150,10 +180,10 @@ namespace Domaci_MVC_1.Controllers
                 */
                 return RedirectToAction("List");
             }
-           
-           
 
-            
+
+
+
         }
     }
 }

@@ -19,11 +19,12 @@ namespace Domaci_MVC_1.Models
         public string Name { get; set; }
         public double Price { get; set; }
         public BookGenre Genre { get; set; }
+        public Dictionary<string, Chapter> Chapters { get; set; }
         public bool isDeleted { get; set; } = false;
 
        
 
-        public Book(string name, double price, BookGenre genre, bool isDeleted)
+        public Book(string name, double price, BookGenre genre, bool isDeleted /*,List<Chapter> chapters*/)
         {
             this.Id = idCounter;
             idCounter++;
@@ -31,6 +32,26 @@ namespace Domaci_MVC_1.Models
             this.Price = price;
             this.Genre = genre;
             this.isDeleted = isDeleted;
+            this.Chapters = new Dictionary<string, Chapter>();
+            /*this.Chapters = new Dictionary<string, Chapter>();
+
+            if (chapters !=null && chapters.Count > 0)
+            {
+                for (int i = 0; i < chapters.Count; i++)
+                {
+                    this.Chapters.Add(chapters[i].Name, chapters[i]);
+
+                }
+            }
+            */
+            
+           
+        }
+
+        public void AddChapter( string name, string content)
+        {
+            Chapter chapter = new Chapter(name, content, this);
+            this.Chapters.Add(chapter.Name, chapter);
         }
     }
 }
