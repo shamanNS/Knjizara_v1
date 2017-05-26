@@ -18,7 +18,7 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult Pretraga(string Name, int tipPretrage)
         {
-            IEnumerable<Book> listaRezultata;
+            List<Book> listaRezultata;
             if (tipPretrage == 1)
             {
                listaRezultata =
@@ -35,7 +35,17 @@ namespace Domaci_MVC_1.Controllers
                      select b).ToList();
             }
 
-            return View(listaRezultata);
+            if (listaRezultata != null && listaRezultata.Count > 0)
+            {
+
+                return View(listaRezultata);
+            }
+            else
+            {
+                listaRezultata = null;
+                return View(listaRezultata);
+            }
+           
 
             //string tip = (tipPretrage == 1) ? "nazivima knjiga" : "nazivima poglavlja";
             //return Content(string.Format("Tražim {0} među {1}", Name, tip));

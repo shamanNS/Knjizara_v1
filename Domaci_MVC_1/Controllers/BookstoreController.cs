@@ -44,25 +44,39 @@ namespace Domaci_MVC_1.Controllers
             listaKnjiga.Add(book1);
             listaKnjiga.Add(book2);
         }
+
+
+        static bool CheckForDeletedBooks() {
+            bool retVal = false;
+            List<Book> filtriranaLista = new List<Book>();
+            for (int i = 0; i < listaKnjiga.Count; i++)
+            {
+                if (listaKnjiga[i].isDeleted == true)
+                {
+                    filtriranaLista.Add(listaKnjiga[i]);
+                    retVal = true;
+                    break;
+                }
+            }
+
+            return retVal;
+        }
         public ActionResult Index()
         {
-            
-
-
-
             return View();
         }
 
 
         public ActionResult List()
         {
-            
+
             /*
              * ukoliko želim da sadržaj view izgleda drugačije
              * ukoliko nema šta da prikaže, znači da ne prikazuje
              * praznu tabelu ovde bi u principu trebalo nešto
              * na sličan fazon kao za Deleted metod ispod
               */
+
 
             return View(listaKnjiga);
         }
@@ -76,27 +90,37 @@ namespace Domaci_MVC_1.Controllers
              * ima obrisanih knjiga i na osnovu toga rezultuje različitim prikazom
               */
 
-            bool HasDeletedBooks = false;
+            #region komentarisan kod
+            //bool HasDeletedBooks = false;
 
-            for (int i = 0; i < listaKnjiga.Count; i++)
-            {
-                if (listaKnjiga[i].isDeleted == true)
-                {
-                    HasDeletedBooks = true;
-                    break;
-                }
-            }
+            //for (int i = 0; i < listaKnjiga.Count; i++)
+            //{
+            //    if (listaKnjiga[i].isDeleted == true)
+            //    {
+            //        HasDeletedBooks = true;
+            //        break;
+            //    }
+            //}
 
-            if (HasDeletedBooks != false)
+            //if (HasDeletedBooks != false)
+            //{
+            //    return View(listaKnjiga);
+            //}
+            //else
+            //{
+            //    //return null;
+            //    return Content("<h2>Trenutno nema obrisanih knjiga!</h2>");
+            //}
+           #endregion
+            if (CheckForDeletedBooks() == true)
             {
                 return View(listaKnjiga);
             }
             else
             {
-                //return null;
-                return Content("<h2>Trenutno nema obrisanih knjiga!</h2>");
+                return View("List", null);
             }
-            
+
         }
 
         [HttpPost]

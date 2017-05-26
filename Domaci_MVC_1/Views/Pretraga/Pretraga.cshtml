@@ -6,28 +6,39 @@
 
 <h2>Rezultati pretrage</h2>
 
+@{
+    if (Model != null)
+    {
+        <table class="table-bordered table-striped">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
 
-<table class="table-bordered table-striped">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
+            </tr>
 
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                </tr>
+            }
+        </table>
+    }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-
-    </tr>
+    else
+    {
+        <h3 class="alert-warning">Ne postoji knjiga/poglavlje sa zadatim nazivom.</h3>
+    }
 }
+@Html.ActionLink("Nazad na pretragu", "Index", "Pretraga")
 
-</table>
+ 
