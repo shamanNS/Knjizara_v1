@@ -23,13 +23,13 @@ namespace Domaci_MVC_1.Models
 
        
 
-        public Book(string name, double price,/* BookGenre genre,*/ bool isDeleted)
+        public Book(string name, double price, BookGenre genre, bool isDeleted)
         {
             this.Id = idCounter;
             idCounter++;
             this.Name = name;
             this.Price = price;
-            //this.Genre = genre;
+            this.Genre = genre;
             this.isDeleted = isDeleted;
         }
     }

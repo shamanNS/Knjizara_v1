@@ -12,8 +12,8 @@ namespace Domaci_MVC_1.Controllers
 
         public  static List<Book> listaKnjiga = new List<Book>()
             {
-                new Book("Harry Potter", 200, /*BookGenre.Science,*/ false),
-                 new Book("Game of Thrones", 222, /*BookGenre.Comedy,*/ false)
+                new Book("Harry Potter", 200, BookGenre.Science, false),
+                 new Book("Game of Thrones", 222, BookGenre.Comedy, false)
             };
 
 
@@ -54,7 +54,7 @@ namespace Domaci_MVC_1.Controllers
 
         [HttpPost]
         //public ActionResult AddBook(Book book)
-        public ActionResult AddBook(string Name, double Price)
+        public ActionResult AddBook(string Name, double Price, BookGenre Genre)
         {
 
             /*
@@ -62,7 +62,7 @@ namespace Domaci_MVC_1.Controllers
              * što bi se objektivno radilo preko provere Id, znači trebala
              * bi izmena parametara metode/akcije
               */
-            Book book = new Book(Name, Price, false);
+            Book book = new Book(Name, Price, Genre, false);
             listaKnjiga.Add(book);
             return RedirectToAction("List");
 
