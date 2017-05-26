@@ -11,7 +11,7 @@
 
 @{ if (Model != null)
     {
-        <table border="1">
+        <table class="table-striped table-bordered">
             <tr>
                 <th>Id</th>
                 <th>Name</th>
@@ -28,7 +28,12 @@
                         <td>@b.Name</td>
                         <td>@b.Price</td>
                         <td>@b.Genre</td>
-                        <td>@Html.ActionLink("Delete", "DeleteBook", new { Id = @b.Id})</td>
+                        <td>
+                            <form action="/Bookstore/DeleteBook/@b.Id" method="post">
+                                <input type="submit" value="Delete" class="btn btn-link"/>
+                            </form>
+                        </td>
+                        @*<td>@Html.ActionLink("Delete", "DeleteBook", new { Id = @b.Id})</td>*@
                     </tr>
                 }
 

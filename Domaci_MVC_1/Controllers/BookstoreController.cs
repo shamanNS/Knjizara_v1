@@ -116,7 +116,7 @@ namespace Domaci_MVC_1.Controllers
              * kako bi se linkovao "Delete" link u "All books" tabeli
              * da brisanje radi pomoću POST metode umesto GET?
               */
-        [HttpGet]
+        [HttpPost]
         public ActionResult DeleteBook(int Id)
         {
             Book knjiga = null;
