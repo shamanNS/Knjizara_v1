@@ -11,7 +11,29 @@
 
 @{ if (Model != null)
     {
+        <table id="filterForm_list">
+            <tr >
+                <td colspan="2">
+                    <span><b>Sortiraj: </b></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <form method="post" action="/Bookstore/List/">
+                        <select name="kriterijumSortiranja">
+                            <option value="1">po nazivu (A-Z)</option>
+                            <option value="2">po nazivu (Z-A)</option>
+                            <option value="3">po ceni (rastuće)</option>
+                            <option value="4">po ceni (opadajuće)</option>
+                        </select>
+                        <input type="submit"  value="sortiraj" />
+                    </form>
+                </td>
+            </tr>
+        </table>
+        <br />
         <table class="table-striped table-bordered">
+            
             <tr>
                 <th>Id</th>
                 <th>Name</th>

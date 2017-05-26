@@ -61,6 +61,49 @@ namespace Domaci_MVC_1.Controllers
 
             return retVal;
         }
+
+        static List<Book> SortBooks(string kriterijum)
+        {
+            List<Book> sortiranaLista;
+            switch (kriterijum)
+            {
+                case "1":
+                    sortiranaLista = (from b in listaKnjiga
+                                      orderby b.Name ascending
+                                      select b).ToList();
+
+                    break;
+
+                case "2":
+                    sortiranaLista = (from b in listaKnjiga
+                                      orderby b.Name descending
+                                      select b).ToList();
+
+                    break;
+
+                case "3":
+                    sortiranaLista = (from b in listaKnjiga
+                                      orderby b.Price ascending
+                                      select b).ToList();
+
+                    break;
+
+                case "4":
+                    sortiranaLista = (from b in listaKnjiga
+                                      orderby b.Price descending
+                                      select b).ToList();
+                    break;
+
+                default:
+                    sortiranaLista = (from b in listaKnjiga
+                                      orderby b.Id ascending
+                                      select b).ToList();
+                    break;
+            }
+
+            return sortiranaLista;
+
+        }
         public ActionResult Index()
         {
             return View();
@@ -79,6 +122,17 @@ namespace Domaci_MVC_1.Controllers
 
 
             return View(listaKnjiga);
+        }
+
+
+
+        //akcija za sortiranje
+        [HttpPost]
+        public ActionResult List(string kriterijumSortiranja)
+        {
+            var sortiranaLista = SortBooks(kriterijumSortiranja);
+
+            return View(sortiranaLista);
         }
 
         public ActionResult Deleted()
@@ -124,17 +178,38 @@ namespace Domaci_MVC_1.Controllers
         }
 
         [HttpPost]
-        //public ActionResult AddBook(Book book)
+        public ActionResult Deleted(string kriterijumSortiranja)
+        {
+            var sortiranaLista = SortBooks(kriterijumSortiranja);
+            return View(sortiranaLista);
+        }
+
+        [HttpPost]
         public ActionResult AddBook(string Name, double Price, BookGenre Genre)
         {
-            /*
-             * fali naravno prvo provera da li lista/baza već sadrži knjgu
-             * što bi se objektivno radilo preko provere Id, znači trebala
-             * bi izmena parametara metode/akcije
-              */
             Book book = new Book(Name, Price, Genre, false);
-            listaKnjiga.Add(book);
-            return RedirectToAction("List");
+            
+            bool PostojiVec = false;
+            foreach (Book b in listaKnjiga)
+            {
+                if (b.Name.ToLower() == book.Name.ToLower())
+                {
+                    PostojiVec = true;
+                    break;
+                }
+            }
+            if (!PostojiVec)
+            {
+                listaKnjiga.Add(book);
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return Content(String.Format("<h3>Već postoji knjiga sa nazivom {0} !<br />", Name));
+            }
+
+            //listaKnjiga.Add(book);
+            //return RedirectToAction("List");
 
 
             #region komenaterisan kod
