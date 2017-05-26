@@ -1,7 +1,27 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Pretraga knjiga";
 }
 
-<h2>Index</h2>
-
+<h2>Pretraga knjiga</h2>
+<form method="post" action="/Pretraga/Pretraga">
+    <table>
+        <tr>
+            <td>
+                <input type="text" name="Name" placeholder="unesi kriterijum pretrage" style="text-align: center" required/>
+            </td>
+            <td>
+                <span>&nbsp;pretraga po&nbsp;</span>
+            </td>
+            <td>
+                <select name="tipPretrage" required>
+                    <option value="1">nazivu knjige</option>
+                    <option value="2">nazivu poglavlja</option>
+                </select>
+            </td>
+            <td>
+                <input type="submit" value="Traži" />
+            </td>
+        </tr>
+    </table>
+</form>

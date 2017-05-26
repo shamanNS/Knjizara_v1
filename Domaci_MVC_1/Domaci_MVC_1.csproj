@@ -193,6 +193,7 @@
     <Content Include="Views\Bookstore\List.cshtml" />
     <Content Include="Views\Bookstore\Deleted.cshtml" />
     <Content Include="Views\Pretraga\Index.cshtml" />
+    <Content Include="Views\Pretraga\Pretraga.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

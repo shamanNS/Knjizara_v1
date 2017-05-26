@@ -60,11 +60,10 @@ namespace Domaci_MVC_1.Controllers
             /*
              * ukoliko želim da sadržaj view izgleda drugačije
              * ukoliko nema šta da prikaže, znači da ne prikazuje
-             * praznu tabelu ovde bi u principu trebalo napraviti podListu knjiga
-             * kod kojih je isDeleted == false i tu listu proslediti kao model na view
-             * tj proslediti null ako nema knjiga koje zadovoljavaju kriterijum
-             * jer u view kodu proveravam da li je model null
+             * praznu tabelu ovde bi u principu trebalo nešto
+             * na sličan fazon kao za Deleted metod ispod
               */
+
             return View(listaKnjiga);
         }
 
@@ -73,20 +72,37 @@ namespace Domaci_MVC_1.Controllers
             /*
              * ukoliko želim da sadržaj view izgleda drugačije
              * ukoliko nema šta da prikaže, znači da ne prikazuje
-             * praznu tabelu ovde bi u principu trebalo napraviti podListu knjiga
-             * kod kojih je isDeleted == false i tu listu proslediti kao model na view
-             * tj proslediti null ako nema knjiga koje zadovoljavaju kriterijum
-             * jer u view kodu proveravam da li je model null
+             * praznu tabelu ovde bi u principu trebalo proveri jel lista 
+             * ima obrisanih knjiga i na osnovu toga rezultuje različitim prikazom
               */
 
-            return View(listaKnjiga);
+            bool HasDeletedBooks = false;
+
+            for (int i = 0; i < listaKnjiga.Count; i++)
+            {
+                if (listaKnjiga[i].isDeleted == true)
+                {
+                    HasDeletedBooks = true;
+                    break;
+                }
+            }
+
+            if (HasDeletedBooks != false)
+            {
+                return View(listaKnjiga);
+            }
+            else
+            {
+                //return null;
+                return Content("<h2>Trenutno nema obrisanih knjiga!</h2>");
+            }
+            
         }
 
         [HttpPost]
         //public ActionResult AddBook(Book book)
         public ActionResult AddBook(string Name, double Price, BookGenre Genre)
         {
-
             /*
              * fali naravno prvo provera da li lista/baza već sadrži knjgu
              * što bi se objektivno radilo preko provere Id, znači trebala
@@ -142,10 +158,7 @@ namespace Domaci_MVC_1.Controllers
         //}
         #endregion
 
-        /* PITATI NA PREDAVANJU
-         * kako bi se linkovao "Delete" link u "All books" tabeli
-         * da brisanje radi pomoću POST metode umesto GET?
-          */
+
         [HttpPost]
         public ActionResult DeleteBook(int Id)
         {
@@ -180,8 +193,6 @@ namespace Domaci_MVC_1.Controllers
                 */
                 return RedirectToAction("List");
             }
-
-
 
 
         }
