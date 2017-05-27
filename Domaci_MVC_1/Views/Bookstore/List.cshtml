@@ -26,7 +26,7 @@
                             <option value="3">po ceni (rastuće)</option>
                             <option value="4">po ceni (opadajuće)</option>
                         </select>
-                        <input type="submit"  value="sortiraj" />
+                        <button type="submit"  value="sortiraj" class="glyphicon glyphicon-sort" title="sortiraj" />
                     </form>
                 </td>
             </tr>
@@ -52,7 +52,7 @@
                         <td>@b.Genre</td>
                         <td>
                             <form action="/Bookstore/DeleteBook/@b.Id" method="post">
-                                <input type="submit" value="Delete" class="btn btn-link"/>
+                                <button type="submit"  class="glyphicon glyphicon-remove btn btn-link" title="Delete book"/>
                             </form>
                         </td>
                         @*<td>@Html.ActionLink("Delete", "DeleteBook", new { Id = @b.Id})</td>*@
@@ -70,7 +70,8 @@
 
 
 <div>
-    @Html.ActionLink("Link for homepage", "Index", "Bookstore")
+   @Html.ActionLink("Add more books | ", "Index", "Bookstore")
+    @Html.ActionLink("Deleted books", "Deleted", "Bookstore")
 </div>
 
 @section Scripts {

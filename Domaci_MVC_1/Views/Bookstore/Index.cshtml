@@ -18,13 +18,13 @@
         <tr>
             <td>Name of book</td>
             <td>
-                <input type="text" name="Name" />
+                <input type="text" name="Name" required/>
             </td>
         </tr>
         <tr>
             <td>Price of book</td>
             <td>
-                <input type="text" name="Price" />
+                <input type="text" name="Price" required/>
             </td>
         </tr>
         @*<tr>
@@ -37,7 +37,7 @@
         <tr>
             <td>Genre of book</td>
             <td>
-                <select name="Genre">
+                <select name="Genre" required>
                     <option value="1">@BookGenre.Science</option>
                     <option value="2">@BookGenre.Comedy</option>
                     <option value="3">@BookGenre.Horror</option>

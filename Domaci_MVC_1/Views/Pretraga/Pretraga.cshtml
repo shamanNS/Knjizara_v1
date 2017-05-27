@@ -6,6 +6,7 @@
 
 <h2>Rezultati pretrage</h2>
 
+@{var vrstaPretrage = (@Request["tipPretrage"] == "1") ? "knjiga" : "poglavlje"; }
 @{
     if (Model != null)
     {
@@ -36,7 +37,7 @@
 
     else
     {
-        <h3 class="alert-warning">Ne postoji knjiga/poglavlje sa zadatim nazivom.</h3>
+        <h3 class="alert-warning">Ne postoji [@vrstaPretrage] sa nazivom: "@Request["Name"]".</h3>
     }
 }
 @Html.ActionLink("Nazad na pretragu", "Index", "Pretraga")

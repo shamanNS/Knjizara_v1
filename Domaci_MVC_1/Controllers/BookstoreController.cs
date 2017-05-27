@@ -131,8 +131,15 @@ namespace Domaci_MVC_1.Controllers
         public ActionResult List(string kriterijumSortiranja)
         {
             var sortiranaLista = SortBooks(kriterijumSortiranja);
-
-            return View(sortiranaLista);
+            if (sortiranaLista != null & sortiranaLista.Count > 0)
+            {
+                return View(sortiranaLista);
+            }
+            else
+            {
+                return View("List", null);
+            }
+            //return View(sortiranaLista);
         }
 
         public ActionResult Deleted()
@@ -172,7 +179,7 @@ namespace Domaci_MVC_1.Controllers
             }
             else
             {
-                return View("List", null);
+                return View("Deleted", null);
             }
 
         }
