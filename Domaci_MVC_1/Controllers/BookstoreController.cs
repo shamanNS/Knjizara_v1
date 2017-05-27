@@ -120,8 +120,15 @@ namespace Domaci_MVC_1.Controllers
              * na sličan fazon kao za Deleted metod ispod
               */
 
-
-            return View(listaKnjiga);
+            if (listaKnjiga.Where(b => b.isDeleted== false).Count() > 0)
+            {
+                return View(listaKnjiga);
+            }
+            else
+            {
+                return View("List", null);
+            }
+            //return View(listaKnjiga);
         }
 
 
