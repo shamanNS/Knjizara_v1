@@ -275,37 +275,39 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult DeleteBook(int Id)
         {
-            Book knjiga = null;
+           // Book knjiga = null;
             foreach (Book b in listaKnjiga)
             {
                 if (b.Id == Id)
                 {
-                    knjiga = b;
+                    b.isDeleted = true;
                     break;
                 }
             }
-            if (knjiga != null)
-            {
-                int index = listaKnjiga.IndexOf(knjiga);
-                listaKnjiga[index].isDeleted = true;
-                return RedirectToAction("List");
-            }
-            else
-            {
-                /* ovde bi onda trebalo izbaciti Alert u browseru
-                 * koji obaveštava korisnika da ne postoji knjiga sa datim ID-em
-                 * ili dodavanje novom DOM elementa koje sadrži sličnu informaciju
-                 * ali oboje podrazumeva da znamo JavaScript :P
-                 * 
-                 * Mada, pitanje je da li uopšte ovde u kodu treba osigurati podršku i za takav neki scenario
-                 * ako po dizajnu ovoj Akciji se pristupa isključivo putem "Delete" action linka
-                 * koji se pojavljuje u "All books" tabeli.
-                 * Ali neko uvek može da van UI proba da pošalje zahtev na pravi route...
-                 * 
-                 * Ne bi baš trebalo da se samo redirektuje na listu svih knjiga kao što radim ispod:
-                */
-                return RedirectToAction("List");
-            }
+            return RedirectToAction("List");
+            /* if (knjiga != null)
+             {
+                 int index = listaKnjiga.IndexOf(knjiga);
+                 listaKnjiga[index].isDeleted = true;
+                 return RedirectToAction("List");
+             }
+             else
+             {*/
+            /* ovde bi onda trebalo izbaciti Alert u browseru
+             * koji obaveštava korisnika da ne postoji knjiga sa datim ID-em
+             * ili dodavanje novom DOM elementa koje sadrži sličnu informaciju
+             * ali oboje podrazumeva da znamo JavaScript :P
+             * 
+             * Mada, pitanje je da li uopšte ovde u kodu treba osigurati podršku i za takav neki scenario
+             * ako po dizajnu ovoj Akciji se pristupa isključivo putem "Delete" action linka
+             * koji se pojavljuje u "All books" tabeli.
+             * Ali neko uvek može da van UI proba da pošalje zahtev na pravi route...
+             * 
+             * Ne bi baš trebalo da se samo redirektuje na listu svih knjiga kao što radim ispod:
+            */
+
+            //return RedirectToAction("List");
+            //}
 
 
         }

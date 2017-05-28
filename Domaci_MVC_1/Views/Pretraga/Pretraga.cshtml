@@ -18,6 +18,12 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Price)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Genre)
+                </th>
+                <th>
+                   Chapters
+                </th>
 
             </tr>
 
@@ -29,6 +35,17 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        <ul>
+                            @foreach (var chapter in item.Chapters.Values)
+                            {
+                                <li>@chapter.Name</li>
+                            }
+                        </ul>
                     </td>
                 </tr>
             }
