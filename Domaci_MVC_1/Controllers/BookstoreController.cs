@@ -366,24 +366,40 @@ namespace Domaci_MVC_1.Controllers
                 //ispraviti da obaveštava da nema knjiga sa tim Id
                 return RedirectToAction("List");
             }
-            
+
         }
 
 
 
 
-        [HttpPost]
-        public ActionResult Edit(Book book)
-        {
-            //Product prod = null;
-            for (int i = 0; i < listaKnjiga.Count; i++)
-            {
-                if (listaKnjiga[i].Id == book.Id)
-                {
-                    listaKnjiga[i] = book;
-                    break;
-                }
+        //[HttpPost]
+        //public ActionResult Edit(Book book)
+        //{
+        //    //Product prod = null;
+        //    for (int i = 0; i < listaKnjiga.Count; i++)
+        //    {
+        //        if (listaKnjiga[i].Id == book.Id)
+        //        {
+        //            listaKnjiga[i] = book;
+        //            break;
+        //        }
 
+        //    }
+        //    return RedirectToAction("List");
+        //}
+
+        [HttpPost]
+        public ActionResult Edit(int Id, string Name, double Price, int GenreId)
+        {
+
+            Book book = listaKnjiga.Where(b => b.Id == Id).SingleOrDefault();
+            Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == GenreId).SingleOrDefault();
+
+            if (book != null && genre != null)
+            {
+                book.Name = Name;
+                book.Price = Price;
+                book.Genre = genre;
             }
             return RedirectToAction("List");
         }
