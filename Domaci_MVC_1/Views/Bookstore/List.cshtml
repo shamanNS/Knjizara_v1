@@ -19,7 +19,9 @@
             </tr>
             <tr>
                 <td>
-                    <form method="post" action="/Bookstore/List/">
+                    @using (Html.BeginForm("List", "Bookstore", FormMethod.Post))
+                    { 
+                    
                         <select name="kriterijumSortiranja">
                             <option value="1">po nazivu (A-Z)</option>
                             <option value="2">po nazivu (Z-A)</option>
@@ -27,7 +29,8 @@
                             <option value="4">po ceni (opadajuće)</option>
                         </select>
                         <button type="submit"  value="sortiraj" class="glyphicon glyphicon-sort" title="sortiraj" />
-                    </form>
+                    }
+                   
                 </td>
             </tr>
         </table>
@@ -35,27 +38,35 @@
         <table class="table-striped table-bordered">
             
             <tr>
-                <th>Id</th>
+                @*<th>Id</th>*@
                 <th>Name</th>
                 <th>Price</th>
                 <th>Genre</th>
-                <th></th>
+                <th colspan="2"></th>
             </tr>
             @foreach (Book b in Model)
-            {
-                if (!b.isDeleted)
-                {
+                    {
+                        if (!b.isDeleted)
+                        {
                     <tr>
-                        <td>@b.Id</td>
+                        @*<td>@b.Id</td>*@
                         <td>@b.Name</td>
                         <td>@b.Price</td>
-                        <td>@b.Genre</td>
+                        <td>@b.Genre.Name</td>
                         <td>
-                            <form action="/Bookstore/DeleteBook/@b.Id" method="post">
-                                <button type="submit"  class="glyphicon glyphicon-remove btn btn-link" title="Delete book"/>
-                            </form>
+                            @using (Html.BeginForm("DeleteBook", "Bookstore", new { Id = @b.Id }, FormMethod.Post, null))
+                            {
+                                @Html.Hidden("Id", @b.Id)
+                                <button type="submit" class="glyphicon glyphicon-remove btn btn-link" title="Delete book" />
+                            }
                         </td>
-                        @*<td>@Html.ActionLink("Delete", "DeleteBook", new { Id = @b.Id})</td>*@
+                        <td>
+                            @using (Html.BeginForm("Edit", "Bookstore", null, FormMethod.Get, null))
+                            {
+                                @Html.Hidden("Id", @b.Id)
+                                <button type="submit" class="glyphicon glyphicon-edit btn btn-link" title="Edit book" />
+                            }
+                        </td>
                     </tr>
                 }
 

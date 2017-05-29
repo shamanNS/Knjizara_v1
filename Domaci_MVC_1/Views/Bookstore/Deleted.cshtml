@@ -20,7 +20,9 @@
             </tr>
             <tr>
                 <td>
-                    <form method="post" action="/Bookstore/Deleted/">
+                    @using (Html.BeginForm("Deleted", "Bookstore", FormMethod.Post))
+                    {
+                    @*<form method="post" action="/Bookstore/Deleted/">*@
                         <select name="kriterijumSortiranja">
                             <option value="1">po nazivu (A-Z)</option>
                             <option value="2">po nazivu (Z-A)</option>
@@ -28,14 +30,15 @@
                             <option value="4">po ceni (opadajuće)</option>
                         </select>
                         <input type="submit" value="sortiraj" />
-                    </form>
+                    }
+                    @*</form>*@
                 </td>
             </tr>
         </table>
         <br />
         <table class="table-striped table-bordered">
             <tr>
-                <th>Id</th>
+                @*<th>Id</th>*@
                 <th>Name</th>
                 <th>Price</th>
                 <th>Genre</th>
@@ -45,10 +48,10 @@
                 if (b.isDeleted)
                 {
                     <tr>
-                        <td>@b.Id</td>
+                        @*<td>@b.Id</td>*@
                         <td>@b.Name</td>
                         <td>@b.Price</td>
-                        <td>@b.Genre</td>
+                        <td>@b.Genre.Name</td>
                     </tr>
                 }
 

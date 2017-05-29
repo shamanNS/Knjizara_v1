@@ -37,11 +37,21 @@
         <tr>
             <td>Genre of book</td>
             <td>
-                <select name="Genre" required>
-                    <option value="1">@BookGenre.Science</option>
-                    <option value="2">@BookGenre.Comedy</option>
-                    <option value="3">@BookGenre.Horror</option>
+                
+             @* treba odraditi DropdownList
+    @Html.DropDownList("Genre")*@
+                @*@Html.DropDownList("Id", (SelectList)ViewBag.Genres)*@
+                <select name="genreId" required>
+                    @foreach (var b in BookstoreController.listaZanrova)
+                    {
+                        <option value="@b.Id">@b.Name</option>
+                    }
                 </select>
+            @*<select name="Genre" required>
+            <option value="1">@BookGenre.Science</option>
+            <option value="2">@BookGenre.Comedy</option>
+            <option value="3">@BookGenre.Horror</option>
+        </select>*@
             </td>
         </tr>
         <tr style="text-align: right">

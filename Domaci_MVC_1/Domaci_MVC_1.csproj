@@ -150,6 +150,7 @@
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\Bookstore.cs" />
     <Compile Include="Models\Chapter.cs" />
+    <Compile Include="Models\Genre.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +195,7 @@
     <Content Include="Views\Bookstore\Deleted.cshtml" />
     <Content Include="Views\Pretraga\Index.cshtml" />
     <Content Include="Views\Pretraga\Pretraga.cshtml" />
+    <Content Include="Views\Bookstore\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

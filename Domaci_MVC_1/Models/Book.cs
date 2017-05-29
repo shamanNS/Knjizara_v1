@@ -5,12 +5,7 @@ using System.Web;
 
 namespace Domaci_MVC_1.Models
 {
-   public enum BookGenre
-    {
-        Science = 1,
-        Comedy = 2,
-        Horror = 3
-    }
+  
     public class Book
     {
         public static int idCounter = 1;
@@ -18,13 +13,20 @@ namespace Domaci_MVC_1.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
-        public BookGenre Genre { get; set; }
+        public Genre Genre { get; set; }
         public Dictionary<string, Chapter> Chapters { get; set; }
         public bool isDeleted { get; set; } = false;
 
-       
+        public Book()
+        {
+            this.Id = idCounter;
+            idCounter++;
+            this.isDeleted = false;
+            this.Chapters = new Dictionary<string, Chapter>();
+            this.Genre = new Genre("");
+        }
 
-        public Book(string name, double price, BookGenre genre, bool isDeleted /*,List<Chapter> chapters*/)
+        public Book(string name, double price, Genre genre, bool isDeleted /*,List<Chapter> chapters*/)
         {
             this.Id = idCounter;
             idCounter++;

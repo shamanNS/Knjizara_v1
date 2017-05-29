@@ -11,6 +11,7 @@ namespace Domaci_MVC_1.Controllers
     {
 
         public static List<Book> listaKnjiga  = new List<Book>();
+        public static List<Genre> listaZanrova = new List<Genre>();
 
         #region nekoriscen metod
         //public static void PopuniListuKnjiga()
@@ -32,8 +33,13 @@ namespace Domaci_MVC_1.Controllers
         static BookstoreController()
         {
             //PopuniListuKnjiga();
-            Book book1 = new Book("Harry Potter", 200, BookGenre.Science, false);
-            Book book2 = new Book("Game of Thrones", 222, BookGenre.Comedy, false);
+            Genre genre1 = new Genre("Science");
+            Genre genre2 = new Genre("Comedy");
+            Genre genre3 = new Genre("Horror");
+
+            Book book1 = new Book("Harry Potter", 200, genre1, false);
+            Book book2 = new Book("Game of Thrones", 222, genre2, false);
+            Book book3 = new Book("Lord of the Rings", 300, genre3, false);
 
             book1.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, prve knjige");
             book1.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, prve knjige");
@@ -41,8 +47,20 @@ namespace Domaci_MVC_1.Controllers
             book2.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, druge knjige");
             book2.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, druge knjige");
 
+            book3.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, treće knjige");
+            book3.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, treće knjige");
+
             listaKnjiga.Add(book1);
             listaKnjiga.Add(book2);
+            listaKnjiga.Add(book3);
+
+            genre1.Books.Add(book1);
+            genre2.Books.Add(book2);
+            genre3.Books.Add(book3);
+
+            listaZanrova.Add(genre1);
+            listaZanrova.Add(genre2);
+            listaZanrova.Add(genre3);
         }
 
 
@@ -122,6 +140,9 @@ namespace Domaci_MVC_1.Controllers
 
             if (listaKnjiga.Where(b => b.isDeleted== false).Count() > 0)
             {
+                ViewBag.Genres = new SelectList(listaZanrova.OrderBy(g => g.Name),
+
+             "Id", "Name", null);
                 return View(listaKnjiga);
             }
             else
@@ -129,6 +150,21 @@ namespace Domaci_MVC_1.Controllers
                 return View("List", null);
             }
             //return View(listaKnjiga);
+
+            /*
+             treba dodati SelectList u ViewBag/Session/gde god
+             koji se koristi u Html.DropDownListFor da napravi
+             select html element sa svim Genre-ovima
+
+
+            ViewBag.Genres = new SelectList(storeDB.Genres.OrderBy(g => g.Name), 
+
+             "GenreId", "Name", album.GenreId);
+             */
+
+            //ViewBag.Genres = new SelectList(listaZanrova.OrderBy(g => g.Name),
+
+            // "Id", "Name", null);
         }
 
 
@@ -199,9 +235,10 @@ namespace Domaci_MVC_1.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddBook(string Name, double Price, BookGenre Genre)
+        public ActionResult AddBook(string Name, double Price, int genreId)
         {
-            Book book = new Book(Name, Price, Genre, false);
+            Genre genre = listaZanrova.Where(g => g.Id == genreId).Single();
+            Book book = new Book(Name, Price, genre, false);
             
             bool PostojiVec = false;
             foreach (Book b in listaKnjiga)
@@ -215,6 +252,10 @@ namespace Domaci_MVC_1.Controllers
             if (!PostojiVec)
             {
                 listaKnjiga.Add(book);
+                if (!listaZanrova.Contains(book.Genre))
+                {
+                    listaZanrova.Add(book.Genre);
+                }
                 return RedirectToAction("List");
             }
             else
@@ -310,6 +351,32 @@ namespace Domaci_MVC_1.Controllers
             //}
 
 
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int Id)
+        {
+            var book = listaKnjiga.Where(b => b.Id == Id).Single();
+            return View(book);
+        }
+
+
+
+
+        [HttpPost]
+        public ActionResult Edit(Book book)
+        {
+            //Product prod = null;
+            for (int i = 0; i < listaKnjiga.Count; i++)
+            {
+                if (listaKnjiga[i].Id == book.Id)
+                {
+                    listaKnjiga[i] = book;
+                    break;
+                }
+
+            }
+            return RedirectToAction("List");
         }
     }
 }

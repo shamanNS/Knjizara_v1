@@ -4,7 +4,9 @@
 }
 
 <h2>Pretraga knjiga</h2>
-<form method="post" action="/Pretraga/Pretraga">
+@using (Html.BeginForm("Pretraga", "Pretraga", FormMethod.Post))
+{ 
+@*<form method="post" action="/Pretraga/Pretraga">*@
     <table>
         <tr>
             <td>
@@ -24,4 +26,5 @@
             </td>
         </tr>
     </table>
-</form>
+}
+@*</form>*@
