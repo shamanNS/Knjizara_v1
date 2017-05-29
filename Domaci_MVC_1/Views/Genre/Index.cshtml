@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Domaci_MVC_1.Models.Genre>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Genre - List</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table table-bordered table-striped" style="width:auto; min-width: 300px">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if (!item.isDeleted)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                
+                    @*@Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+                    <span>
+                        @using (Html.BeginForm("Delete", "Genre", new { id = @item.Id }, FormMethod.Post, null))
+                    {
+                            @*<input type="hidden" name="Id"/>*@
+                            <input type="submit" value="Delete" class="btn btn-link" />
+                        }
+                    </span>
+                </td>
+            </tr>
+        }
+
+
+    }
+</table>
+   

@@ -44,7 +44,11 @@
                 <select name="genreId" required>
                     @foreach (var b in BookstoreController.listaZanrova)
                     {
-                        <option value="@b.Id">@b.Name</option>
+                        if (b.isDeleted == false)
+                        {
+                            <option value="@b.Id">@b.Name</option>
+                        }
+
                     }
                 </select>
             @*<select name="Genre" required>

@@ -237,7 +237,7 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult AddBook(string Name, double Price, int genreId)
         {
-            Genre genre = listaZanrova.Where(g => g.Id == genreId).Single();
+            Genre genre = listaZanrova.Where(g => g.Id == genreId).SingleOrDefault();
             Book book = new Book(Name, Price, genre, false);
             
             bool PostojiVec = false;
@@ -356,8 +356,17 @@ namespace Domaci_MVC_1.Controllers
         [HttpGet]
         public ActionResult Edit(int Id)
         {
-            var book = listaKnjiga.Where(b => b.Id == Id).Single();
-            return View(book);
+            var book = listaKnjiga.Where(b => b.Id == Id).SingleOrDefault();
+            if (book != null)
+            {
+                return View(book);
+            }
+            else
+            {
+                //ispraviti da obaveštava da nema knjiga sa tim Id
+                return RedirectToAction("List");
+            }
+            
         }
 
 

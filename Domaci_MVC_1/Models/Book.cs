@@ -23,7 +23,7 @@ namespace Domaci_MVC_1.Models
             idCounter++;
             this.isDeleted = false;
             this.Chapters = new Dictionary<string, Chapter>();
-            this.Genre = new Genre("");
+            this.Genre = new Genre();
         }
 
         public Book(string name, double price, Genre genre, bool isDeleted /*,List<Chapter> chapters*/)

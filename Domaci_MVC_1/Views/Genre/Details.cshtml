@@ -1,0 +1,42 @@
+﻿@model Domaci_MVC_1.Models.Genre
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details for genre: @Model.Name</h2>
+
+<div>
+
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.LabelFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+</div>
+<div>
+    @if (Model.Books != null && Model.Books.Count > 0)
+    {
+        <p>List of books:</p>
+        <ul>
+            @foreach (var b in Model.Books)
+            {
+                <li>@b.Name</li>
+            }
+        </ul>
+    }
+    else
+    {
+     <h2>No books in genre "@Model.Name"</h2>
+    }
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

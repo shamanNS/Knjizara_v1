@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,8 +10,11 @@ namespace Domaci_MVC_1.Models
     {
         private static int IdCounter = 1;
         public int Id { get; set; }
+
+        //[Display(Name = "Genre")]
         public string Name { get; set; }
         public List<Book> Books { get; set; }
+        public bool isDeleted { get; set; }
 
         public Genre()
         {
@@ -18,7 +22,9 @@ namespace Domaci_MVC_1.Models
             IdCounter++;
             this.Books = new List<Book>();
             this.Name = "";
+            this.isDeleted = false;
         }
+       
         public Genre(string name)
         {
             
@@ -26,6 +32,7 @@ namespace Domaci_MVC_1.Models
                 IdCounter++;
             this.Books = new List<Book>();
                 this.Name = name;
+            this.isDeleted = false;
 
         }
         public Genre(string name, List<Book> books)
@@ -34,6 +41,7 @@ namespace Domaci_MVC_1.Models
             IdCounter++;
             this.Books =books;
             this.Name = name;
+            this.isDeleted = false;
         }
     }
 }
