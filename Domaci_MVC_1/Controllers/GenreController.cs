@@ -101,6 +101,11 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
+            /*
+             Da li bi pri brisanju žanra trebalo setovati na null Genre
+             property svih knjiga koje su bile tog žanra ?
+             */
+
             Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
             if (genre != null)
             {

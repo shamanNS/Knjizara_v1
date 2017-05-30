@@ -237,8 +237,14 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult AddBook(string Name, double Price, int genreId)
         {
+           
             Genre genre = listaZanrova.Where(g => g.Id == genreId).SingleOrDefault();
             Book book = new Book(Name, Price, genre, false);
+
+            /*
+             DODAVANJE KNJIGE U Genre.Books kolekciju!
+             */
+            book.Genre.Books.Add(book);
             
             bool PostojiVec = false;
             foreach (Book b in listaKnjiga)
@@ -316,12 +322,16 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult DeleteBook(int Id)
         {
+            
+
            // Book knjiga = null;
             foreach (Book b in listaKnjiga)
             {
                 if (b.Id == Id)
                 {
                     b.isDeleted = true;
+                   // UKLANJANJE KNJIGE IZ Genre.Books kolekcije!
+                    b.Genre.Books.Remove(b);
                     break;
                 }
             }
@@ -397,9 +407,24 @@ namespace Domaci_MVC_1.Controllers
 
             if (book != null && genre != null)
             {
+                //genre.Books.Remove(book);
+                book.Genre.Books.Remove(book);
                 book.Name = Name;
                 book.Price = Price;
                 book.Genre = genre;
+                book.Genre.Books.Add(book);
+
+                //int gId = book.Genre.Id;
+                //for (int i = 0; i < listaZanrova.Count; i++)
+                //{
+                //    if (listaZanrova[i].Id == gId )
+                //    {
+                //        listaZanrova[i].Books.Add(book);
+                //    }
+                     
+                //}
+
+
             }
             return RedirectToAction("List");
         }
