@@ -7,6 +7,7 @@ using Domaci_MVC_1.Models;
 
 namespace Domaci_MVC_1.Controllers
 {
+    [RoutePrefix("knjige")]
     public class BookstoreController : Controller
     {
 
@@ -30,6 +31,7 @@ namespace Domaci_MVC_1.Controllers
 
         //}
         #endregion
+            
         static BookstoreController()
         {
             //PopuniListuKnjiga();
@@ -122,12 +124,14 @@ namespace Domaci_MVC_1.Controllers
             return sortiranaLista;
 
         }
+
+        [Route("dodaj-novu")]
         public ActionResult Index()
         {
             return View();
         }
 
-
+        [Route("lista-knjiga")]
         public ActionResult List()
         {
 
@@ -149,8 +153,8 @@ namespace Domaci_MVC_1.Controllers
             {
                 return View("List", null);
             }
-            //return View(listaKnjiga);
 
+            #region komentar za SelectList
             /*
              treba dodati SelectList u ViewBag/Session/gde god
              koji se koristi u Html.DropDownListFor da napravi
@@ -165,11 +169,13 @@ namespace Domaci_MVC_1.Controllers
             //ViewBag.Genres = new SelectList(listaZanrova.OrderBy(g => g.Name),
 
             // "Id", "Name", null);
+            #endregion
         }
 
 
 
         //akcija za sortiranje
+        [Route("lista-knjiga")]
         [HttpPost]
         public ActionResult List(string kriterijumSortiranja)
         {
@@ -185,6 +191,7 @@ namespace Domaci_MVC_1.Controllers
             //return View(sortiranaLista);
         }
 
+        [Route("obrisane")]
         public ActionResult Deleted()
         {
             /*
@@ -227,6 +234,8 @@ namespace Domaci_MVC_1.Controllers
 
         }
 
+        //akcija za sortiranje
+        [Route("obrisane")]
         [HttpPost]
         public ActionResult Deleted(string kriterijumSortiranja)
         {
@@ -318,7 +327,6 @@ namespace Domaci_MVC_1.Controllers
         //}
         #endregion
 
-
         [HttpPost]
         public ActionResult DeleteBook(int Id)
         {
@@ -336,6 +344,7 @@ namespace Domaci_MVC_1.Controllers
                 }
             }
             return RedirectToAction("List");
+            #region komentar dugacak
             /* if (knjiga != null)
              {
                  int index = listaKnjiga.IndexOf(knjiga);
@@ -359,10 +368,11 @@ namespace Domaci_MVC_1.Controllers
 
             //return RedirectToAction("List");
             //}
-
+            #endregion
 
         }
 
+        [Route("izmeni")]
         [HttpGet]
         public ActionResult Edit(int Id)
         {
@@ -381,7 +391,7 @@ namespace Domaci_MVC_1.Controllers
 
 
 
-
+        #region komentarisan los kod
         //[HttpPost]
         //public ActionResult Edit(Book book)
         //{
@@ -397,7 +407,9 @@ namespace Domaci_MVC_1.Controllers
         //    }
         //    return RedirectToAction("List");
         //}
+        #endregion
 
+        [Route("izmeni")]
         [HttpPost]
         public ActionResult Edit(int Id, string Name, double Price, int GenreId)
         {

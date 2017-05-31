@@ -6,16 +6,17 @@ using System.Web.Mvc;
 using Domaci_MVC_1.Models;
 namespace Domaci_MVC_1.Controllers
 {
+    [RoutePrefix("zanr")]
     public class GenreController : Controller
     {
-        // GET: Genre
+        [Route("")]
         public ActionResult Index()
         {
             List<Genre> genres = BookstoreController.listaZanrova;
             return View(genres);
         }
 
-        // GET: Genre/Details/5
+        [Route("detalji")]
         public ActionResult Details(int id)
         {
             Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
@@ -28,13 +29,14 @@ namespace Domaci_MVC_1.Controllers
                 return Content("nema bre");
             }
         }
-            // GET: Genre/Create
-            public ActionResult Create()
+
+        [Route("novi")]
+        public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Genre/Create
+        [Route("novi")]
         [HttpPost]
         public ActionResult Create(string Name)
         {
@@ -45,7 +47,7 @@ namespace Domaci_MVC_1.Controllers
                 {
                     BookstoreController.listaZanrova.Add(genre);
                 }
-                // TODO: Add insert logic here
+                
 
                 return RedirectToAction("Index");
             }
@@ -55,7 +57,7 @@ namespace Domaci_MVC_1.Controllers
             }
         }
 
-        // GET: Genre/Edit/5
+        [Route("izmeni")]
         public ActionResult Edit(int id)
         {
             Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
@@ -69,7 +71,7 @@ namespace Domaci_MVC_1.Controllers
             }
         }
 
-        // POST: Genre/Edit/5
+        [Route("izmeni")]
         [HttpPost]
         public ActionResult Edit(int id, string Name)
         {
@@ -97,7 +99,7 @@ namespace Domaci_MVC_1.Controllers
 
 
 
-        // POST: Genre/Delete/5
+        [Route("obrisi")]
         [HttpPost]
         public ActionResult Delete(int id)
         {
