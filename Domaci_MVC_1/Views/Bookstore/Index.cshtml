@@ -1,7 +1,9 @@
 ﻿@using Domaci_MVC_1.Models;
+@using Domaci_MVC_1.ViewModels;
 @using Domaci_MVC_1.Controllers;
 
-@model IEnumerable<Book>
+@*@model IEnumerable<Book>*@
+@model Domaci_MVC_1.ViewModels.BookGenreViewModel
 
 @{
     ViewBag.Title = "Dodavanje knjiga";
@@ -18,13 +20,13 @@
         <tr>
             <td>Name of book</td>
             <td>
-                <input type="text" name="Name" required/>
+                <input type="text" name="Book.Name" required/>
             </td>
         </tr>
         <tr>
             <td>Price of book</td>
             <td>
-                <input type="text" name="Price" required/>
+                <input type="text" name="Book.Price" required/>
             </td>
         </tr>
         @*<tr>
@@ -41,8 +43,8 @@
              @* treba odraditi DropdownList
     @Html.DropDownList("Genre")*@
                 @*@Html.DropDownList("Id", (SelectList)ViewBag.Genres)*@
-                <select name="genreId" required>
-                    @foreach (var b in BookstoreController.listaZanrova)
+                <select name="SelectedGenreId" required>
+                    @foreach (var b in Model.Genres)
                     {
                         if (b.isDeleted == false)
                         {

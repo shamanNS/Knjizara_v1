@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Domaci_MVC_1.Models;
+using Domaci_MVC_1.ViewModels;
+using Domaci_MVC_1.Repository;
 
 namespace Domaci_MVC_1.Controllers
 {
@@ -128,7 +130,9 @@ namespace Domaci_MVC_1.Controllers
         [Route("dodaj-novu")]
         public ActionResult Index()
         {
-            return View();
+            BookGenreViewModel vm = new BookGenreViewModel();
+            vm.Genres = listaZanrova;
+            return View(vm);
         }
 
         [Route("lista-knjiga")]
@@ -244,11 +248,14 @@ namespace Domaci_MVC_1.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddBook(string Name, double Price, int genreId)
+        //public ActionResult AddBook(string Name, double Price, int genreId)
+        public ActionResult AddBook(BookGenreViewModel vm)
         {
            
-            Genre genre = listaZanrova.Where(g => g.Id == genreId).SingleOrDefault();
-            Book book = new Book(Name, Price, genre, false);
+            Genre genre = listaZanrova.Where(g => g.Id == vm.SelectedGenreId).SingleOrDefault();
+            //Book book = new Book(Name, Price, genre, false);
+            Book book = vm.Book;
+            book.Genre = genre;
 
             /*
              DODAVANJE KNJIGE U Genre.Books kolekciju!
@@ -275,7 +282,7 @@ namespace Domaci_MVC_1.Controllers
             }
             else
             {
-                return Content(String.Format("<h3>Već postoji knjiga sa nazivom {0} !<br />", Name));
+                return Content(String.Format("<h3>Već postoji knjiga sa nazivom {0} !<br />", book.Name));
             }
 
             //listaKnjiga.Add(book);
@@ -376,10 +383,14 @@ namespace Domaci_MVC_1.Controllers
         [HttpGet]
         public ActionResult Edit(int Id)
         {
+            BookGenreViewModel vm = new BookGenreViewModel();
+            vm.Genres = listaZanrova;
+
             var book = listaKnjiga.Where(b => b.Id == Id).SingleOrDefault();
             if (book != null)
             {
-                return View(book);
+                vm.Book = book;
+                return View(vm);
             }
             else
             {
@@ -411,18 +422,19 @@ namespace Domaci_MVC_1.Controllers
 
         [Route("izmeni")]
         [HttpPost]
-        public ActionResult Edit(int Id, string Name, double Price, int GenreId)
+        //public ActionResult Edit(int Id, string Name, double Price, int GenreId)
+        public ActionResult Edit(BookGenreViewModel vm)
         {
 
-            Book book = listaKnjiga.Where(b => b.Id == Id).SingleOrDefault();
-            Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == GenreId).SingleOrDefault();
+            Book book = listaKnjiga.Where(b => b.Id == vm.Book.Id).SingleOrDefault();
+            Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == vm.SelectedGenreId).SingleOrDefault();
 
             if (book != null && genre != null)
             {
                 //genre.Books.Remove(book);
                 book.Genre.Books.Remove(book);
-                book.Name = Name;
-                book.Price = Price;
+                book.Name = vm.Book.Name;
+                book.Price = vm.Book.Price;
                 book.Genre = genre;
                 book.Genre.Books.Add(book);
 

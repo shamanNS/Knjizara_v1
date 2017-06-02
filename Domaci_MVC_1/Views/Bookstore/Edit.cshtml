@@ -1,6 +1,9 @@
-﻿@using Domaci_MVC_1.Controllers
+﻿@using Domaci_MVC_1.Models;
+@using Domaci_MVC_1.ViewModels;
+@using Domaci_MVC_1.Controllers;
 
-@model Domaci_MVC_1.Models.Book
+@*@model Domaci_MVC_1.Models.Book*@
+@model Domaci_MVC_1.ViewModels.BookGenreViewModel
 
 @{
     ViewBag.Title = "Edit";
@@ -9,41 +12,40 @@
 <h2>Edit</h2>
 
 
-@using (Html.BeginForm("Edit", "Bookstore", new { Id = Model.Id }, FormMethod.Post))
+@using (Html.BeginForm("Edit", "Bookstore", new { Id = Model.Book.Id }, FormMethod.Post))
 {
 
 
     <div class="form-horizontal">
-        <h4>Book: @Model.Name</h4>
+        <h4>Book: @Model.Book.Name</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Book.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, "Name of the book", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Book.Name, "Name of the book", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name,  new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Book.Name,  new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Book.Name, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Price, "Price of the book", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Book.Price, "Price of the book", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Book.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Book.Price, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.Genre, "Genre of the book", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Book.Genre, "Genre of the book", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
 
-                @*@Html.EditorFor(model => model.Genre.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })*@
-                <select name="GenreId">
-                    @foreach (var item in BookstoreController.listaZanrova)
+               
+                <select name="SelectedGenreId">
+                    @foreach (var item in Model.Genres)
                     {
-                        if (item.Id == Model.Genre.Id)
+                        if (item.Id == Model.Book.Genre.Id)
                         {
                             <option value="@item.Id" selected>@item.Name</option>
                             }
