@@ -15,7 +15,8 @@ namespace Domaci_MVC_1.Controllers
 
         public static List<Book> listaKnjiga  = new List<Book>();
         public static List<Genre> listaZanrova = new List<Genre>();
-        private IRepository<Genre> genreRepo = new GenreRepository();
+        private static IRepository<Genre> genreRepo = new GenreRepository();
+        private static IRepository<Book> bookRepo = new BookRepository();
 
         #region nekoriscen metod
         //public static void PopuniListuKnjiga()
@@ -38,34 +39,35 @@ namespace Domaci_MVC_1.Controllers
         static BookstoreController()
         {
             //PopuniListuKnjiga();
-            Genre genre1 = new Genre("Science");
-            Genre genre2 = new Genre("Comedy");
-            Genre genre3 = new Genre("Horror");
+            //Genre genre1 = new Genre("Science");
+            //Genre genre2 = new Genre("Comedy");
+            //Genre genre3 = new Genre("Horror");
 
-            Book book1 = new Book("Harry Potter", 200, genre1, false);
-            Book book2 = new Book("Game of Thrones", 222, genre2, false);
-            Book book3 = new Book("Lord of the Rings", 300, genre3, false);
+            //Book book1 = new Book("Harry Potter", 200, genre1, false);
+            //Book book2 = new Book("Game of Thrones", 222, genre2, false);
+            //Book book3 = new Book("Lord of the Rings", 300, genre3, false);
 
-            book1.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, prve knjige");
-            book1.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, prve knjige");
+            //book1.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, prve knjige");
+            //book1.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, prve knjige");
 
-            book2.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, druge knjige");
-            book2.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, druge knjige");
+            //book2.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, druge knjige");
+            //book2.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, druge knjige");
 
-            book3.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, treće knjige");
-            book3.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, treće knjige");
+            //book3.AddChapter("Chapter 1", "Ovo je sadržaj Chapter 1, treće knjige");
+            //book3.AddChapter("Chapter 2", "Ovo je sadržaj Chapter 2, treće knjige");
 
-            listaKnjiga.Add(book1);
-            listaKnjiga.Add(book2);
-            listaKnjiga.Add(book3);
+            //listaKnjiga.Add(book1);
+            //listaKnjiga.Add(book2);
+            //listaKnjiga.Add(book3);
 
-            genre1.Books.Add(book1);
-            genre2.Books.Add(book2);
-            genre3.Books.Add(book3);
+            //genre1.Books.Add(book1);
+            //genre2.Books.Add(book2);
+            //genre3.Books.Add(book3);
 
             //listaZanrova.Add(genre1);
             //listaZanrova.Add(genre2);
             //listaZanrova.Add(genre3);
+            listaKnjiga = (List<Book>)bookRepo.GetAll();
         }
 
 
@@ -275,23 +277,34 @@ namespace Domaci_MVC_1.Controllers
                     break;
                 }
             }
+
             if (!PostojiVec)
             {
                 listaKnjiga.Add(book);
                 if (!listaZanrova.Contains(book.Genre))
                 {
                     listaZanrova.Add(book.Genre);
+                    if (bookRepo.Create(book))
+                    {
+                        return RedirectToAction("List");
+                    }
+                    else
+                    {
+                        return View("List");
+                    }
+                    
                 }
-                return RedirectToAction("List");
+                //return RedirectToAction("List");
             }
             else
             {
-                return Content(String.Format("<h3>Već postoji knjiga sa nazivom {0} !<br />", book.Name));
+                return View("Index");
+                //return Content(String.Format("<h3>Već postoji knjiga sa nazivom {0} !<br />", book.Name));
             }
 
             //listaKnjiga.Add(book);
             //return RedirectToAction("List");
-
+            return View();
 
             #region komenaterisan kod
             //if (ModelState.IsValid)

@@ -20,7 +20,7 @@ namespace Domaci_MVC_1.Repository
             conn = new SqlConnection(connString);
         }
 
-        public bool Create(Genre obj)
+        public bool Create(Genre genre)
         {
             string query = "INSERT INTO Genre (GenreName) VALUES (@GenreName);";
             query += " SELECT SCOPE_IDENTITY()";        // selektuj id novododatog zapisa nakon upisa u bazu
@@ -29,12 +29,12 @@ namespace Domaci_MVC_1.Repository
 
             using (SqlCommand cmd = conn.CreateCommand())
             {
-                cmd.CommandText = query;    // ovde dodeljujemo upit koji ce se izvrsiti nad bazom podataka
-                cmd.Parameters.AddWithValue("@GenreName", obj.Name);  // stitimo od SQL Injection napada
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@GenreName", genre.Name);
 
-                conn.Open();                                         // otvori konekciju
+                conn.Open();
                 var newFormedId = cmd.ExecuteScalar();              // izvrsi upit nad bazom, vraca id novododatog zapisa
-                conn.Close();                                        // zatvori konekciju
+                conn.Close();
 
                 if (newFormedId != null)
                 {
