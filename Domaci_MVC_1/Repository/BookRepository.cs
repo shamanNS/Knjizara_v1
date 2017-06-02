@@ -4,14 +4,18 @@ using System.Linq;
 using System.Web;
 using Domaci_MVC_1.Models;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace Domaci_MVC_1.Repository
 {
     public class BookRepository : IRepository<Book>
     {
+        private SqlConnection conn;
         private void LoadConnection()
         {
-            SqlConnection conn = new SqlConnection();
+            //string connString = ConfigurationManager.ConnectionStrings["AlephDbContext"].ConnectionString;
+            string connString = ConfigurationManager.ConnectionStrings["HomeDbContext"].ConnectionString;
+            conn = new SqlConnection();
         }
 
         

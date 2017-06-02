@@ -15,6 +15,7 @@ namespace Domaci_MVC_1.Controllers
 
         public static List<Book> listaKnjiga  = new List<Book>();
         public static List<Genre> listaZanrova = new List<Genre>();
+        private IRepository<Genre> genreRepo = new GenreRepository();
 
         #region nekoriscen metod
         //public static void PopuniListuKnjiga()
@@ -62,9 +63,9 @@ namespace Domaci_MVC_1.Controllers
             genre2.Books.Add(book2);
             genre3.Books.Add(book3);
 
-            listaZanrova.Add(genre1);
-            listaZanrova.Add(genre2);
-            listaZanrova.Add(genre3);
+            //listaZanrova.Add(genre1);
+            //listaZanrova.Add(genre2);
+            //listaZanrova.Add(genre3);
         }
 
 
@@ -131,6 +132,9 @@ namespace Domaci_MVC_1.Controllers
         public ActionResult Index()
         {
             BookGenreViewModel vm = new BookGenreViewModel();
+            listaZanrova = (List<Genre>)genreRepo.GetAll();
+
+
             vm.Genres = listaZanrova;
             return View(vm);
         }

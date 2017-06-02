@@ -4,11 +4,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Domaci_MVC_1.Models;
+using Domaci_MVC_1.ViewModels;
+using Domaci_MVC_1.Repository;
+
 namespace Domaci_MVC_1.Controllers
 {
     [RoutePrefix("zanr")]
     public class GenreController : Controller
     {
+        private IRepository<Genre> genreRepo = new GenreRepository();
+
         [Route("")]
         public ActionResult Index()
         {
@@ -46,10 +51,19 @@ namespace Domaci_MVC_1.Controllers
                 if (!BookstoreController.listaZanrova.Contains(genre))
                 {
                     BookstoreController.listaZanrova.Add(genre);
+                    
                 }
-                
+                if (genreRepo.Create(genre))
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
 
-                return RedirectToAction("Index");
+                }
+
+                //return RedirectToAction("Index");
             }
             catch
             {
