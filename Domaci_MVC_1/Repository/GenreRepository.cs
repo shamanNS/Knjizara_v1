@@ -51,6 +51,7 @@ namespace Domaci_MVC_1.Repository
 
         public IEnumerable<Genre> GetAll()
         {
+           
             LoadConnection();
             string query = "SELECT BookId, BookName, BookPrice, Book.GenreId, GenreName FROM Book JOIN Genre ON Book.GenreId = Genre.GenreId;";
             DataTable dt = new DataTable(); // objekti u 

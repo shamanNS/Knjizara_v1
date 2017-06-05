@@ -28,7 +28,7 @@
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                
+
                     @*@Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
                     <span>
                         @using (Html.BeginForm("Delete", "Genre", new { id = @item.Id }, FormMethod.Post, null))
@@ -44,4 +44,3 @@
 
     }
 </table>
-   

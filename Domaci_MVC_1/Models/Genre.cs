@@ -11,7 +11,7 @@ namespace Domaci_MVC_1.Models
         private static int IdCounter = 1;
         public int Id { get; set; }
 
-        //[Display(Name = "Genre")]
+        [Required]
         public string Name { get; set; }
         public List<Book> Books { get; set; }
         public bool isDeleted { get; set; }
