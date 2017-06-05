@@ -38,6 +38,7 @@ namespace Domaci_MVC_1.Controllers
             
         static BookstoreController()
         {
+            #region hardocoded liste
             //PopuniListuKnjiga();
             //Genre genre1 = new Genre("Science");
             //Genre genre2 = new Genre("Comedy");
@@ -67,7 +68,10 @@ namespace Domaci_MVC_1.Controllers
             //listaZanrova.Add(genre1);
             //listaZanrova.Add(genre2);
             //listaZanrova.Add(genre3);
+        #endregion
+
             listaKnjiga = (List<Book>)bookRepo.GetAll();
+            listaZanrova = (List<Genre>)genreRepo.GetAll();
         }
 
 
@@ -134,7 +138,7 @@ namespace Domaci_MVC_1.Controllers
         public ActionResult Index()
         {
             BookGenreViewModel vm = new BookGenreViewModel();
-            listaZanrova = (List<Genre>)genreRepo.GetAll();
+            //listaZanrova = (List<Genre>)genreRepo.GetAll();
 
 
             vm.Genres = listaZanrova;
@@ -288,10 +292,10 @@ namespace Domaci_MVC_1.Controllers
                     {
                         return RedirectToAction("List");
                     }
-                    else
-                    {
-                        return View("List");
-                    }
+                    //else
+                    //{
+                    //    return View("List");
+                    //}
                     
                 }
                 //return RedirectToAction("List");

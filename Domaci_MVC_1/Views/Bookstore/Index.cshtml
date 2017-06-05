@@ -10,6 +10,7 @@
 }
 
 <h2>Bookstore - Home page</h2>
+@Html.ValidationSummary()
 <form action="/Bookstore/AddBook" method="post">
     <table class="table-striped table-bordered">
         <tr>
@@ -20,53 +21,38 @@
         <tr>
             <td>Name of book</td>
             <td>
-                <input type="text" name="Book.Name" required/>
+                <input type="text" name="Book.Name"/>
             </td>
         </tr>
         <tr>
             <td>Price of book</td>
             <td>
-                <input type="text" name="Book.Price" required/>
+                <input type="text" name="Book.Price"/>
             </td>
         </tr>
-        @*<tr>
-                <td>Genre of book</td>
-                <td>
-                    <input type="text" name="Genre" />
-                </td>
-            </tr>*@
-
         <tr>
             <td>Genre of book</td>
             <td>
                 
              @* treba odraditi DropdownList
     @Html.DropDownList("Genre")*@
-                @*@Html.DropDownList("Id", (SelectList)ViewBag.Genres)*@
-                <select name="SelectedGenreId" required>
+              
+                <select name="SelectedGenreId">
                     @foreach (var b in Model.Genres)
                     {
                         if (b.isDeleted == false)
                         {
                             <option value="@b.Id">@b.Name</option>
                         }
-
                     }
                 </select>
-            @*<select name="Genre" required>
-            <option value="1">@BookGenre.Science</option>
-            <option value="2">@BookGenre.Comedy</option>
-            <option value="3">@BookGenre.Horror</option>
-        </select>*@
             </td>
         </tr>
         <tr style="text-align: right">
             <td colspan="2">
                 <input type="submit" value="Add" />
             </td>
-
         </tr>
-
     </table>
 </form>
 <div style="display: inline-block;">

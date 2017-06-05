@@ -35,13 +35,13 @@
             </tr>
         </table>
         <br />
-        <table class="table-striped table-bordered">
+        <table class="table-striped table-bordered" style="min-width: 400px">
             
             <tr>
                 @*<th>Id</th>*@
-                <th>Name</th>
-                <th>Price</th>
-                <th>Genre</th>
+                <th>@Html.DisplayNameFor(m => m.Name)</th>
+                <th>@Html.DisplayNameFor(m => m.Price)</th>
+                <th>@Html.DisplayNameFor(m => m.Genre)</th>
                 <th colspan="2"></th>
             </tr>
             @foreach (Book b in Model)
@@ -49,20 +49,25 @@
                         if (!b.isDeleted)
                         {
                     <tr>
-                        @*<td>@b.Id</td>*@
-                        <td>@b.Name</td>
+                        @*<td>@b.Id</td>
+                        <td>@b.Name)</td>
                         <td>@b.Price</td>
-                        <td>@b.Genre.Name</td>
+                        <td>@b.Genre.Name</td>*@
+
+                        <td>@Html.DisplayFor(modelitem => @b.Name)</td>
+                        <td>@Html.DisplayFor(modelitem => @b.Price)</td>
+                        <td>@Html.DisplayFor(modelitem => @b.Genre.Name)</td>
                         <td>
                             @using (Html.BeginForm("DeleteBook", "Bookstore", new { Id = @b.Id }, FormMethod.Post, null))
                             {
-                                @Html.Hidden("Id", @b.Id)
+                                @*@Html.Hidden("Id", @b.Id)*@
                                 <button type="submit" class="glyphicon glyphicon-remove btn btn-link" title="Delete book" />
                             }
                         </td>
                         <td>
-                            @using (Html.BeginForm("Edit", "Bookstore", null, FormMethod.Get, null))
+                            @using (Html.BeginForm("Edit", "Bookstore", new { Id = @b.Id }, FormMethod.Get, null))
                             {
+                                @*PITATI NA PREDAVANJU ZASTO NE SALJE ID AKO NEMA HIDDEN ELEMENTA ZA ID*@
                                 @Html.Hidden("Id", @b.Id)
                                 <button type="submit" class="glyphicon glyphicon-edit btn btn-link" title="Edit book" />
                             }
