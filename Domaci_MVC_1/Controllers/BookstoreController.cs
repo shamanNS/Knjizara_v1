@@ -13,8 +13,8 @@ namespace Domaci_MVC_1.Controllers
     public class BookstoreController : Controller
     {
 
-        public static List<Book> listaKnjiga  = new List<Book>();
-        public static List<Genre> listaZanrova = new List<Genre>();
+        //public static List<Book> listaKnjiga  = new List<Book>();
+        //public static List<Genre> listaZanrova = new List<Genre>();
         private static IRepository<Genre> genreRepo = new GenreRepository();
         private static IRepository<Book> bookRepo = new BookRepository();
 
@@ -70,29 +70,14 @@ namespace Domaci_MVC_1.Controllers
             //listaZanrova.Add(genre3);
         #endregion
 
-            listaKnjiga = (List<Book>)bookRepo.GetAll();
-            listaZanrova = (List<Genre>)genreRepo.GetAll();
+            //listaKnjiga = (List<Book>)bookRepo.GetAll();
+            //listaZanrova = (List<Genre>)genreRepo.GetAll();
         }
+        
 
-
-        static bool CheckForDeletedBooks() {
-            bool retVal = false;
-            List<Book> filtriranaLista = new List<Book>();
-            for (int i = 0; i < listaKnjiga.Count; i++)
-            {
-                if (listaKnjiga[i].isDeleted == true)
-                {
-                    filtriranaLista.Add(listaKnjiga[i]);
-                    retVal = true;
-                    break;
-                }
-            }
-
-            return retVal;
-        }
-
-        static List<Book> SortBooks(string kriterijum)
+        private List<Book> SortBooks(IEnumerable<Book> listaKnjiga, string kriterijum)
         {
+           
             List<Book> sortiranaLista;
             switch (kriterijum)
             {
@@ -138,35 +123,17 @@ namespace Domaci_MVC_1.Controllers
         public ActionResult Index()
         {
             BookGenreViewModel vm = new BookGenreViewModel();
-            //listaZanrova = (List<Genre>)genreRepo.GetAll();
 
-
-            vm.Genres = listaZanrova;
+            vm.Genres = genreRepo.GetAll();
             return View(vm);
         }
 
         [Route("lista-knjiga")]
         public ActionResult List()
         {
-
-            /*
-             * ukoliko želim da sadržaj view izgleda drugačije
-             * ukoliko nema šta da prikaže, znači da ne prikazuje
-             * praznu tabelu ovde bi u principu trebalo nešto
-             * na sličan fazon kao za Deleted metod ispod
-              */
-
-            if (listaKnjiga.Where(b => b.isDeleted== false).Count() > 0)
-            {
-                ViewBag.Genres = new SelectList(listaZanrova.OrderBy(g => g.Name),
-
-             "Id", "Name", null);
-                return View(listaKnjiga);
-            }
-            else
-            {
-                return View("List", null);
-            }
+            var books = bookRepo.GetAll().Where(b => b.isDeleted == false).ToList();
+            return View(books);
+            
 
             #region komentar za SelectList
             /*
@@ -193,7 +160,8 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult List(string kriterijumSortiranja)
         {
-            var sortiranaLista = SortBooks(kriterijumSortiranja);
+            var books = bookRepo.GetAll().Where(b => b.isDeleted == false);
+            var sortiranaLista = SortBooks(books, kriterijumSortiranja);
             if (sortiranaLista != null & sortiranaLista.Count > 0)
             {
                 return View(sortiranaLista);
@@ -202,50 +170,13 @@ namespace Domaci_MVC_1.Controllers
             {
                 return View("List", null);
             }
-            //return View(sortiranaLista);
         }
 
         [Route("obrisane")]
         public ActionResult Deleted()
         {
-            /*
-             * ukoliko želim da sadržaj view izgleda drugačije
-             * ukoliko nema šta da prikaže, znači da ne prikazuje
-             * praznu tabelu ovde bi u principu trebalo proveri jel lista 
-             * ima obrisanih knjiga i na osnovu toga rezultuje različitim prikazom
-              */
-
-            #region komentarisan kod
-            //bool HasDeletedBooks = false;
-
-            //for (int i = 0; i < listaKnjiga.Count; i++)
-            //{
-            //    if (listaKnjiga[i].isDeleted == true)
-            //    {
-            //        HasDeletedBooks = true;
-            //        break;
-            //    }
-            //}
-
-            //if (HasDeletedBooks != false)
-            //{
-            //    return View(listaKnjiga);
-            //}
-            //else
-            //{
-            //    //return null;
-            //    return Content("<h2>Trenutno nema obrisanih knjiga!</h2>");
-            //}
-           #endregion
-            if (CheckForDeletedBooks() == true)
-            {
-                return View(listaKnjiga);
-            }
-            else
-            {
-                return View("Deleted", null);
-            }
-
+            var deletedBooks = bookRepo.GetAll().Where(b => b.isDeleted == true);
+            return View(deletedBooks);
         }
 
         //akcija za sortiranje
@@ -253,62 +184,24 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult Deleted(string kriterijumSortiranja)
         {
-            var sortiranaLista = SortBooks(kriterijumSortiranja);
+            var deletedBooks = bookRepo.GetAll().Where(b => b.isDeleted == true);
+            var sortiranaLista = SortBooks(deletedBooks, kriterijumSortiranja);
             return View(sortiranaLista);
         }
 
         [HttpPost]
-        //public ActionResult AddBook(string Name, double Price, int genreId)
+
         public ActionResult AddBook(BookGenreViewModel vm)
         {
-           
-            Genre genre = listaZanrova.Where(g => g.Id == vm.SelectedGenreId).SingleOrDefault();
-            //Book book = new Book(Name, Price, genre, false);
             Book book = vm.Book;
+            Genre genre = genreRepo.GetById(vm.SelectedGenreId);
             book.Genre = genre;
-
-            /*
-             DODAVANJE KNJIGE U Genre.Books kolekciju!
-             */
-            book.Genre.Books.Add(book);
-            
-            bool PostojiVec = false;
-            foreach (Book b in listaKnjiga)
+            if (bookRepo.Create(book))
             {
-                if (b.Name.ToLower() == book.Name.ToLower())
-                {
-                    PostojiVec = true;
-                    break;
-                }
+                return RedirectToAction("List");
             }
-
-            if (!PostojiVec)
-            {
-                listaKnjiga.Add(book);
-                if (!listaZanrova.Contains(book.Genre))
-                {
-                    listaZanrova.Add(book.Genre);
-                    if (bookRepo.Create(book))
-                    {
-                        return RedirectToAction("List");
-                    }
-                    //else
-                    //{
-                    //    return View("List");
-                    //}
-                    
-                }
-                //return RedirectToAction("List");
-            }
-            else
-            {
-                return View("Index");
-                //return Content(String.Format("<h3>Već postoji knjiga sa nazivom {0} !<br />", book.Name));
-            }
-
-            //listaKnjiga.Add(book);
-            //return RedirectToAction("List");
-            return View();
+            return View("Error");
+          
 
             #region komenaterisan kod
             //if (ModelState.IsValid)
@@ -331,73 +224,25 @@ namespace Domaci_MVC_1.Controllers
             //}
             #endregion
         }
-        #region book kao parametar
-        //[HttpPost]
-        //public ActionResult DeleteBook(Book book)
-        //{
-
-        //    //if (ModelState.IsValid)
-        //    //{
-        //    //    
-        //    //    return RedirectToAction("List");
-        //    //}
-
-        //    if (book != null && listaKnjiga.Contains(book))
-        //    {
-        //        int pozicija = listaKnjiga.IndexOf(book);
-        //        listaKnjiga[pozicija].isDeleted = true;
-        //        return RedirectToAction("List");
-        //    }
-        //    else
-        //    {
-        //        return View();
-        //    }
-        //}
-        #endregion
 
         [HttpPost]
         public ActionResult DeleteBook(int Id)
         {
-            
-
-           // Book knjiga = null;
-            foreach (Book b in listaKnjiga)
-            {
-                if (b.Id == Id)
-                {
-                    b.isDeleted = true;
-                   // UKLANJANJE KNJIGE IZ Genre.Books kolekcije!
-                    b.Genre.Books.Remove(b);
-                    break;
-                }
-            }
+            bookRepo.Delete(Id);
+          
             return RedirectToAction("List");
-            #region komentar dugacak
-            /* if (knjiga != null)
-             {
-                 int index = listaKnjiga.IndexOf(knjiga);
-                 listaKnjiga[index].isDeleted = true;
-                 return RedirectToAction("List");
-             }
-             else
-             {*/
-            /* ovde bi onda trebalo izbaciti Alert u browseru
-             * koji obaveštava korisnika da ne postoji knjiga sa datim ID-em
-             * ili dodavanje novom DOM elementa koje sadrži sličnu informaciju
-             * ali oboje podrazumeva da znamo JavaScript :P
-             * 
-             * Mada, pitanje je da li uopšte ovde u kodu treba osigurati podršku i za takav neki scenario
-             * ako po dizajnu ovoj Akciji se pristupa isključivo putem "Delete" action linka
-             * koji se pojavljuje u "All books" tabeli.
-             * Ali neko uvek može da van UI proba da pošalje zahtev na pravi route...
-             * 
-             * Ne bi baš trebalo da se samo redirektuje na listu svih knjiga kao što radim ispod:
-            */
 
-            //return RedirectToAction("List");
+            // Book knjiga = null;
+            //foreach (Book b in listaKnjiga)
+            //{
+            //    if (b.Id == Id)
+            //    {
+            //        b.isDeleted = true;
+            //       // UKLANJANJE KNJIGE IZ Genre.Books kolekcije!
+            //        b.Genre.Books.Remove(b);
+            //        break;
+            //    }
             //}
-            #endregion
-
         }
 
         [Route("izmeni")]
@@ -405,9 +250,9 @@ namespace Domaci_MVC_1.Controllers
         public ActionResult Edit(int Id)
         {
             BookGenreViewModel vm = new BookGenreViewModel();
-            vm.Genres = listaZanrova;
+            vm.Genres = genreRepo.GetAll();
 
-            var book = listaKnjiga.Where(b => b.Id == Id).SingleOrDefault();
+            var book = bookRepo.GetAll().Where(b => b.Id == Id).SingleOrDefault();
             if (book != null)
             {
                 vm.Book = book;
@@ -420,26 +265,7 @@ namespace Domaci_MVC_1.Controllers
             }
 
         }
-
-
-
-        #region komentarisan los kod
-        //[HttpPost]
-        //public ActionResult Edit(Book book)
-        //{
-        //    //Product prod = null;
-        //    for (int i = 0; i < listaKnjiga.Count; i++)
-        //    {
-        //        if (listaKnjiga[i].Id == book.Id)
-        //        {
-        //            listaKnjiga[i] = book;
-        //            break;
-        //        }
-
-        //    }
-        //    return RedirectToAction("List");
-        //}
-        #endregion
+        
 
         [Route("izmeni")]
         [HttpPost]
@@ -447,29 +273,18 @@ namespace Domaci_MVC_1.Controllers
         public ActionResult Edit(BookGenreViewModel vm)
         {
 
-            Book book = listaKnjiga.Where(b => b.Id == vm.Book.Id).SingleOrDefault();
-            Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == vm.SelectedGenreId).SingleOrDefault();
+            Book book = bookRepo.GetAll().Where(b => b.Id == vm.Book.Id).SingleOrDefault();
+            Genre genre = genreRepo.GetAll().Where(g => g.Id == vm.SelectedGenreId).SingleOrDefault();
 
             if (book != null && genre != null)
             {
-                //genre.Books.Remove(book);
-                book.Genre.Books.Remove(book);
                 book.Name = vm.Book.Name;
                 book.Price = vm.Book.Price;
                 book.Genre = genre;
-                book.Genre.Books.Add(book);
 
-                //int gId = book.Genre.Id;
-                //for (int i = 0; i < listaZanrova.Count; i++)
-                //{
-                //    if (listaZanrova[i].Id == gId )
-                //    {
-                //        listaZanrova[i].Books.Add(book);
-                //    }
-                     
-                //}
+                bookRepo.Update(book);
 
-
+                return RedirectToAction("List");
             }
             return RedirectToAction("List");
         }

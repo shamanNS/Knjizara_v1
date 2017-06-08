@@ -1,4 +1,6 @@
 ﻿using Domaci_MVC_1.Models;
+using Domaci_MVC_1.ViewModels;
+using Domaci_MVC_1.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,9 @@ namespace Domaci_MVC_1.Controllers
 {
     public class PretragaController : Controller
     {
-        
+        private static IRepository<Genre> genreRepo = new GenreRepository();
+        private static IRepository<Book> bookRepo = new BookRepository();
+
         public ActionResult Index()
         {
             return View();
@@ -22,7 +26,7 @@ namespace Domaci_MVC_1.Controllers
             if (tipPretrage == 1)
             {
                listaRezultata =
-                    (from b in BookstoreController.listaKnjiga
+                    (from b in bookRepo.GetAll()
                     where b.Name.ToLower().Contains(Name.ToLower())
                     select b).ToList();
 
@@ -30,7 +34,7 @@ namespace Domaci_MVC_1.Controllers
             else
             {
                 listaRezultata =
-                    (from b in BookstoreController.listaKnjiga
+                    (from b in bookRepo.GetAll()
                      where b.Chapters.ContainsKey(Name)
                      select b).ToList();
             }

@@ -46,6 +46,15 @@ namespace Domaci_MVC_1.Repository
 
         public void Delete(int id)
         {
+            //string query = "DELETE FROM Genre WHERE GenreId == (@GenreId);";
+
+            //connection();   // inicijaizuj novu konekciju
+
+            //using (SqlCommand cmd = con.CreateCommand())
+            //{
+            //    cmd.CommandText = query;    // ovde dodeljujemo upit koji ce se izvrsiti nad bazom podataka
+            //    cmd.Parameters.AddWithValue("@GenreId", id);  // stitimo od SQL Injection napada
+            //}
             throw new NotImplementedException();
         }
 
@@ -53,7 +62,7 @@ namespace Domaci_MVC_1.Repository
         {
            
             LoadConnection();
-            string query = "SELECT BookId, BookName, BookPrice, Book.GenreId, GenreName FROM Book JOIN Genre ON Book.GenreId = Genre.GenreId;";
+            string query = "SELECT * FROM Genre;";
             DataTable dt = new DataTable(); // objekti u 
             DataSet ds = new DataSet();     // koje smestam podatke
 
@@ -86,12 +95,54 @@ namespace Domaci_MVC_1.Repository
 
         public Genre GetById(int id)
         {
-            throw new NotImplementedException();
+            string query = "SELECT * FROM Genre g WHERE g.GenreId = @GenreId;";
+            LoadConnection();   // inicijaizuj novu konekciju
+
+            DataTable dt = new DataTable(); // objekti u 
+            DataSet ds = new DataSet();     // koje smestam podatke
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@GenreId", id);
+
+                SqlDataAdapter dadapter = new SqlDataAdapter(); // bitan objekat pomocu koga preuzimamo podatke i izvrsavamo upit
+                dadapter.SelectCommand = cmd;                   // nakon izvrsenog upita
+
+                // Fill(...) metoda je bitna, jer se prilikom poziva te metode izvrsava upit nad bazom podataka
+                dadapter.Fill(ds, "Genre"); // 'ProductCategory' je naziv tabele u dataset-u
+                dt = ds.Tables["Genre"];    // formiraj DataTable na osnovu ProductCategory tabele u DataSet-u
+                conn.Close();                  // zatvori konekciju
+            }
+
+            Genre genre = null;
+
+            foreach (DataRow dataRow in dt.Rows)            // izvuci podatke iz svakog reda tj. zapisa tabele
+            {
+                int genreId = int.Parse(dataRow["GenreId"].ToString());    // iz svake kolone datog reda izvuci vrednost
+                string genreName = dataRow["GenreName"].ToString();
+
+                genre = new Genre() { Id = genreId, Name = genreName };
+            }
+
+            return genre;
         }
 
-        public void Update(Genre obj)
+        public void Update(Genre genre)
         {
-            throw new NotImplementedException();
+            string query = "UPDATE Genre SET GenreName = @GenreName WHERE GenreId = @GenreId;";
+
+            LoadConnection();   // inicijaizuj novu konekciju
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;    // ovde dodeljujemo upit koji ce se izvrsiti nad bazom podataka
+                cmd.Parameters.AddWithValue("@GenreName", genre.Name);  // stitimo od SQL Injection napada
+                cmd.Parameters.AddWithValue("@GenreId", genre.Id);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
         }
     }
 }

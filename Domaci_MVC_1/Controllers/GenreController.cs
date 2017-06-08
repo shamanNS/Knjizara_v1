@@ -13,20 +13,26 @@ namespace Domaci_MVC_1.Controllers
     public class GenreController : Controller
     {
         private IRepository<Genre> genreRepo = new GenreRepository();
+        private static IRepository<Book> bookRepo = new BookRepository();
 
         [Route("")]
         public ActionResult Index()
         {
-            List<Genre> genres = BookstoreController.listaZanrova;
+            var genres = genreRepo.GetAll();
             return View(genres);
         }
 
         [Route("detalji")]
         public ActionResult Details(int id)
         {
-            Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
+            Genre genre = genreRepo.GetById(id);
+            var books = bookRepo.GetAll().Where(b => b.Genre.Id == id).ToList();
             if (genre != null)
             {
+                if (books.Count > 0)
+                {
+                    genre.Books = books;
+                }
                 return View(genre);
             }
             else
@@ -45,36 +51,44 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult Create(string Name)
         {
-            try
+
+            Genre genre = new Genre(Name);
+            if (genreRepo.Create(genre))
             {
-                Genre genre = new Genre(Name);
-                if (!BookstoreController.listaZanrova.Contains(genre))
-                {
-                    BookstoreController.listaZanrova.Add(genre);
+                return RedirectToAction("Index");
+            }
+            return View(genre);
+            
+            //try
+            //{
+            //    Genre genre = new Genre(Name);
+            //    if (!BookstoreController.listaZanrova.Contains(genre))
+            //    {
+            //        BookstoreController.listaZanrova.Add(genre);
                     
-                }
-                if (genreRepo.Create(genre))
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View();
+            //    }
+            //    if (genreRepo.Create(genre))
+            //    {
+            //        return RedirectToAction("Index");
+            //    }
+            //    else
+            //    {
+            //        return View();
 
-                }
+            //    }
 
-                //return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            //    //return RedirectToAction("Index");
+            //}
+            //catch
+            //{
+            //    return View();
+            //}
         }
 
         [Route("izmeni")]
         public ActionResult Edit(int id)
         {
-            Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
+            Genre genre = genreRepo.GetById(id);
             if (genre != null)
             {
                 return View(genre);
@@ -89,13 +103,14 @@ namespace Domaci_MVC_1.Controllers
         [HttpPost]
         public ActionResult Edit(int id, string Name)
         {
-            try
-            {
-                // TODO: Add update logic here
-                Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
+
+
+            //Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
+            Genre genre = genreRepo.GetById(id);
                 if (genre != null)
                 {
                     genre.Name = Name;
+                genreRepo.Update(genre);
 
                     return RedirectToAction("Index");
                 }
@@ -104,11 +119,7 @@ namespace Domaci_MVC_1.Controllers
                     return Content("nema bre");
                 }
                 
-            }
-            catch
-            {
-                return View();
-            }
+           
         }
 
 
@@ -122,10 +133,12 @@ namespace Domaci_MVC_1.Controllers
              property svih knjiga koje su bile tog žanra ?
              */
 
-            Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
+            //Genre genre = BookstoreController.listaZanrova.Where(g => g.Id == id).SingleOrDefault();
+            Genre genre = genreRepo.GetById(id);
             if (genre != null)
             {
                 genre.isDeleted = true;
+                genreRepo.Delete(id);
                 return RedirectToAction("Index");
 
             }

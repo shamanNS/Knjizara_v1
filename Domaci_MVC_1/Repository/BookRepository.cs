@@ -20,20 +20,53 @@ namespace Domaci_MVC_1.Repository
         }
 
         
-        public bool Create(Book obj)
+        public bool Create(Book book)
         {
-            throw new NotImplementedException();
+            string query = "INSERT INTO Book (BookName, BookPrice, BookGenre, Deleted) VALUES (@BookName, @BookPrice, @BookGenre, @Deleted);";
+            query += " SELECT SCOPE_IDENTITY()";        // selektuj id novododatog zapisa nakon upisa u bazu
+
+            LoadConnection();   // inicijaizuj novu konekciju
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;    // ovde dodeljujemo upit koji ce se izvrsiti nad bazom podataka
+                cmd.Parameters.AddWithValue("@BookName", book.Name);  // stitimo od SQL Injection napada
+                cmd.Parameters.AddWithValue("@BookPrice", book.Price);
+                cmd.Parameters.AddWithValue("@BookGenre", book.Genre.Id);
+                cmd.Parameters.AddWithValue("@Deleted", book.isDeleted);
+
+                conn.Open();                                         // otvori konekciju
+                var newFormedId = cmd.ExecuteScalar();              // izvrsi upit nad bazom, vraca id novododatog zapisa
+                conn.Close();                                        // zatvori konekciju
+
+                if (newFormedId != null)
+                {
+                    return true;    // upis uspesan, generisan novi id
+                }
+            }
+            return false;
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            string query = "UPDATE Book SET Deleted = 1 WHERE BookId = @BookId;";
+
+            LoadConnection();   // inicijaizuj novu konekciju
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;    // ovde dodeljujemo upit koji ce se izvrsiti nad bazom podataka
+                cmd.Parameters.AddWithValue("@BookId", id);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
         }
 
         public IEnumerable<Book> GetAll()
         {
             LoadConnection();
-            string query = "SELECT BookId, BookName, BookPrice, Book.GenreId, GenreName FROM Book JOIN Genre ON Book.GenreId = Genre.GenreId;";
+            string query = "SELECT * FROM Book b INNER JOIN Genre g ON b.BookGenre = g.GenreId";
             DataTable dt = new DataTable(); // objekti u 
             DataSet ds = new DataSet();     // koje smestam podatke
 
@@ -55,14 +88,16 @@ namespace Domaci_MVC_1.Repository
 
             foreach (DataRow dataRow in dt.Rows)            // izvuci podatke iz svakog reda tj. zapisa tabele
             {
-                int BookId = int.Parse(dataRow["BookId"].ToString());
-                string BookName = dataRow["BookName"].ToString();
-                double BookPrice = double.Parse(dataRow["BookPrice"].ToString());
-                int GenreId = int.Parse(dataRow["GenreId"].ToString());    // iz svake kolone datog reda izvuci vrednost
-                string GenreName = dataRow["GenreName"].ToString();
+                int bookId = int.Parse(dataRow["BookId"].ToString());    // iz svake kolone datog reda izvuci vrednost
+                string bookName = dataRow["BookName"].ToString();
+                double bookPrice = double.Parse(dataRow["BookPrice"].ToString());
+                bool deleted = bool.Parse(dataRow["Deleted"].ToString());
+                int genreId = int.Parse(dataRow["GenreId"].ToString());
+                string genreName = dataRow["GenreName"].ToString();
 
-                Genre genre = new Genre() {Id = GenreId, Name = GenreName, isDeleted = false };
-                Books.Add(new Book() { Id = BookId, Name = BookName, Price = BookPrice, Genre = genre, isDeleted = false });
+                Genre genre = new Genre() { Id = genreId, Name = genreName };
+
+                Books.Add(new Book() { Id = bookId, Name = bookName, Price = bookPrice, Genre = genre, isDeleted = deleted });
             }
 
             return Books;
@@ -70,12 +105,62 @@ namespace Domaci_MVC_1.Repository
 
         public Book GetById(int id)
         {
-            throw new NotImplementedException();
+            // PROVERITI JOŠ OVO
+            string query = "SELECT * FROM Book b INNER JOIN Genre g ON b.BookGenre = g.GenreId WHERE b.BookId = @BookId";
+            LoadConnection();   // inicijaizuj novu konekciju
+
+            DataTable dt = new DataTable(); // objekti u 
+            DataSet ds = new DataSet();     // koje smestam podatke
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@BookId", id);
+
+                SqlDataAdapter dadapter = new SqlDataAdapter(); // bitan objekat pomocu koga preuzimamo podatke i izvrsavamo upit
+                dadapter.SelectCommand = cmd;                   // nakon izvrsenog upita
+
+                // Fill(...) metoda je bitna, jer se prilikom poziva te metode izvrsava upit nad bazom podataka
+                dadapter.Fill(ds, "Book"); // 'ProductCategory' je naziv tabele u dataset-u
+                dt = ds.Tables["Book"];    // formiraj DataTable na osnovu ProductCategory tabele u DataSet-u
+                conn.Close();                  // zatvori konekciju
+            }
+
+            Book book = null;
+
+            foreach (DataRow dataRow in dt.Rows)            // izvuci podatke iz svakog reda tj. zapisa tabele
+            {
+                int bookId = int.Parse(dataRow["BookId"].ToString());    // iz svake kolone datog reda izvuci vrednost
+                string bookName = dataRow["BookName"].ToString();
+                double bookPrice = double.Parse(dataRow["BookPrice"].ToString());
+                int genreId = int.Parse(dataRow["BookGenre"].ToString());
+                string genreName = dataRow["GenreName"].ToString();
+                bool Deleted = bool.Parse(dataRow["Deleted"].ToString());
+
+                Genre genre = new Genre() { Id = genreId, Name = genreName };
+                book = new Book() { Id = bookId, Name = bookName, Price = bookPrice, Genre = genre, isDeleted = Deleted };
+            }
+
+            return book;
         }
 
-        public void Update(Book obj)
+        public void Update(Book book)
         {
-            throw new NotImplementedException();
+            string query = "UPDATE Book SET BookName = @BookName, BookPrice = @BookPrice, BookGenre = @BookGenre WHERE BookId = @BookId;";
+
+            LoadConnection();   // inicijaizuj novu konekciju
+
+            using (SqlCommand cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = query;    // ovde dodeljujemo upit koji ce se izvrsiti nad bazom podataka
+                cmd.Parameters.AddWithValue("@BookName", book.Name);  // stitimo od SQL Injection napada
+                cmd.Parameters.AddWithValue("@BookPrice", book.Price);
+                cmd.Parameters.AddWithValue("@BookGenre", book.Genre.Id);
+                cmd.Parameters.AddWithValue("@BookId", book.Id);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
         }
     }
 }
